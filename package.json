@@ -1,0 +1,36 @@
+{
+  "name": "amqp-suite",
+  "version": "0.1.0",
+  "description": "A simple wrapper for AMQP 0-9-1 messaging.",
+  "license": "MIT",
+  "author": {
+    "name": "Carlos Daniel Menchaca Arauz",
+    "email": "contact@iamcarlosdaniel.com",
+    "url": "http://iamcarlosdaniel.com"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
+  },
+  "keywords": [
+    "amqp",
+    "exchange",
+    "pubsub",
+    "publisher",
+    "consumer",
+    "rabbitmq"
+  ],
+  "dependencies": {
+    "amqplib": "^0.10.9"
+  },
+  "devDependencies": {
+    "@vitest/ui": "^4.0.16",
+    "vitest": "^4.0.16"
+  }
+}
