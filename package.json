@@ -8,6 +8,10 @@
     "email": "contact@iamcarlosdaniel.com",
     "url": "http://iamcarlosdaniel.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamcarlosdaniel/amqp-suite.git"
+  },
   "type": "module",
   "main": "src/index.js",
   "exports": {
