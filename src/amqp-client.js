@@ -23,6 +23,8 @@ class AmqpClient {
     this.channel = null;
     /** @type {boolean} State flag to prevent multiple simultaneous connection attempts. */
     this.isConnecting = false;
+    /** @type {boolean} State flag to indicate if the client is closing. */
+    this.isClosing = false;
   }
 
   /**
@@ -51,11 +53,14 @@ class AmqpClient {
       });
 
       this.connection.on("close", () => {
-        this.isConnecting = false;
         this.connection = null;
         this.channel = null;
-        console.warn(`AMQP connection lost. Retrying in ${delay}ms...`);
-        setTimeout(() => this.connect(), delay);
+
+        if (!this.isClosing) {
+          this.isConnecting = false;
+          console.warn(`AMQP connection lost. Retrying in ${delay}ms...`);
+          setTimeout(() => this.connect(), delay);
+        }
       });
 
       console.log("AMQP: Connection established successfully");
@@ -171,10 +176,12 @@ class AmqpClient {
    */
   async close() {
     try {
+      this.isClosing = true;
       await this.channel?.close();
       await this.connection?.close();
       console.log("AMQP: Connection closed cleanly.");
     } catch (err) {
+      this.isClosing = false;
       console.error("AMQP: Error during shutdown:", err);
     }
   }
