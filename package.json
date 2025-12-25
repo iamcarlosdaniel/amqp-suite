@@ -1,6 +1,6 @@
 {
   "name": "amqp-suite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple wrapper for AMQP 0-9-1 messaging.",
   "license": "MIT",
   "author": {

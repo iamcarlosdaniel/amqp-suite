@@ -1,3 +1,3 @@
-import { AmqpClient } from "./amqp-client";
+import { AmqpClient } from "./amqp-client.js";
 
 export { AmqpClient };
