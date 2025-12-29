@@ -1,8 +1,8 @@
 # amqp-suite
 
-[![NPM version](https://img.shields.io/npm/v/amqp-suite?color=blue)](https://www.npmjs.com/package/amqp-suite)
-[![MIT license](https://img.shields.io/badge/License-MIT-bridhtgreen)](https://opensource.org/licenses/MIT)
-[![NPM downloads](https://img.shields.io/npm/dw/amqp-suite?color=bridhtgreen)](https://www.npmjs.com/package/amqp-suite)
+[![NPM version](https://img.shields.io/npm/v/amqp-suite?color=1447e6&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
+[![MIT license](https://img.shields.io/badge/License-MIT-bridhtgreen?style=flat-square)](https://opensource.org/licenses/MIT)
+[![NPM downloads](https://img.shields.io/npm/dw/amqp-suite?color=bridhtgreen&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
 [![stars](https://img.shields.io/github/stars/iamcarlosdaniel/amqp-suite)](https://github.com/iamcarlosdaniel/amqp-suite)
 
 ![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
@@ -67,6 +67,10 @@ await amqpClient.consume(
   "user.events.*" // Binding key (Topic pattern)
 );
 ```
+
+> ### More Examples
+>
+> - [hello-world](https://github.com/iamcarlosdaniel/amqp-suite/tree/main/example/hello-world)
 
 ## API Reference
 
