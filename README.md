@@ -107,43 +107,140 @@ await amqpClient.close();
 
 ### `new AmqpClient(amqpUrl, exchange)`
 
-- **amqpUrl**: The connection string (e.g., `amqp://user:pass@localhost:5672`).
-- **exchange**: The name of the topic exchange to use.
+Creates a new instance of the AMQP client.
+
+The client uses a **durable topic exchange** to enable flexible message routing using routing patterns.
+
+#### Parameters
+
+- **`amqpUrl`** (`string`)
+  The AMQP connection URL.
+  Example: `amqp://user:pass@localhost:5672`
+
+- **`exchange`** (`string`)
+  The name of the **topic exchange** used for publishing and consuming messages.
+  The exchange is asserted as `durable`.
+
+---
 
 ### `.connect(retries = 5, delay = 5000)`
 
-Establishes the connection and creates the channel. If the connection drops, it will automatically attempt to reconnect.
+Establishes a connection to the AMQP broker and creates a channel.
+If the connection is lost unexpectedly, the client will automatically attempt to reconnect.
 
-- **retries** (optional): Number of reconnection attempts (default: `5`).
-- **delay** (optional): Time interval (in milliseconds) between retries (default: `5000`).
+#### Parameters
+
+- **`retries`** (`number`, optional)
+  Maximum number of reconnection attempts during the initial connection.
+  Default: `5`
+
+- **`delay`** (`number`, optional)
+  Delay in milliseconds between reconnection attempts.
+  Default: `5000`
+
+#### Behavior
+
+- Prevents multiple simultaneous connection attempts.
+- Automatically reconnects if the connection is closed by the broker.
+- Reconnection attempts triggered after a connection drop do **not** reuse the original retry counter.
+
+#### Returns
+
+- `Promise<void>`
+
+---
 
 ### `.publish(routingKey, message, options = {})`
 
-Publishes a message to the configured exchange with the given routing key.
+Publishes a message to the configured topic exchange using the specified routing key.
 
-- **routingKey**: The routing key used to route the message (e.g., `'user.events.create'`).
-- **message**: The message payload, which will be stringified into JSON.
-- **options** (optional): Additional publish options from `amqplib`.
+Messages are automatically serialized to JSON and published as **persistent** by default.
+
+#### Parameters
+
+- **`routingKey`** (`string`)
+  The routing key used to route the message.
+  Example: `user.events.create`
+
+- **`message`** (`object`)
+  The message payload. It will be automatically serialized to JSON.
+
+- **`options`** (`object`, optional)
+  Additional publish options supported by `amqplib`.
+  These options are merged with `{ persistent: true }`.
+
+#### Behavior
+
+- If the channel is not initialized, the client will attempt to connect automatically.
+- If the broker’s write buffer is full, the message may be temporarily buffered locally.
+
+#### Returns
+
+- `Promise<void>`
+
+---
 
 ### `.consume(queue, onMessage, options = {}, bindingKey = "#")`
 
-Consumes messages from the specified queue. The callback `onMessage` is executed when a message is received.
+Consumes messages from the specified queue and binds it to the exchange using the provided routing pattern.
 
-- **queue**: The name of the queue to consume messages from.
-- **onMessage**: An async callback function that will be called with the message content and the original message.
+The `onMessage` callback is executed for each received message.
+
+#### Parameters
+
+- **`queue`** (`string`)
+  The name of the queue to consume messages from.
+  The queue is asserted as `durable`.
+
+- **`onMessage`** (`function`)
+  An asynchronous callback executed when a message is received.
 
   ```javascript
   async (content, rawMessage) => {
-    /* logic */
+    // message handling logic
   };
   ```
 
-- **options** (optional): Additional options like `prefetch` (default is 10).
-- **bindingKey** (optional): The routing pattern to bind the queue (default is `#`).
+  - `content`: Parsed JSON message payload.
+  - `rawMessage`: The original `ConsumeMessage` from `amqplib`.
+
+- **`options`** (`object`, optional)
+  Consumer configuration options.
+
+  - **`prefetch`** (`number`):
+    Limits the number of unacknowledged messages.
+    Default: `10`
+
+- **`bindingKey`** (`string`, optional)
+  The routing pattern used to bind the queue to the exchange.
+  Default: `#` (matches all routing keys).
+
+#### Behavior
+
+- Messages are acknowledged (`ack`) automatically after successful processing.
+- If an error is thrown while processing a message:
+
+  - The message is negatively acknowledged (`nack`)
+  - The message is **not requeued**, preventing infinite retry loops for malformed messages.
+
+#### Returns
+
+- `Promise<void>`
+
+---
 
 ### `.close()`
 
-Gracefully closes the channel and the connection.
+Gracefully closes the AMQP channel and connection.
+
+#### Behavior
+
+- Prevents automatic reconnection during shutdown.
+- Ensures resources are released cleanly.
+
+#### Returns
+
+- `Promise<void>`
 
 ## License
 
