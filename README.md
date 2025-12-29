@@ -27,50 +27,81 @@ npm install amqp-suite
 
 ### 1. Initialize and Connect
 
-Create an instance of the `AmqpClient` and establish a connection to the RabbitMQ broker.
+Create an instance of `AmqpClient` and establish a connection to your RabbitMQ broker. This prepares the client to publish and consume messages.
 
 ```javascript
 import { AmqpClient } from "amqp-suite";
 
-const amqpClient = new AmqpClient("amqp://localhost", "my_exchange");
+const amqpClient = new AmqpClient("amqp://localhost", "example-exchange");
 
-// Connect with optional retry config (retries, delay in ms)
-await amqpClient.connect(5, 2000);
+await amqpClient.connect();
 ```
 
 ### 2. Publish Messages
 
-The `publish` method ensures that the message is stringified and sent as a persistent buffer.
+The `publish` method automatically stringifies your message and sends it as a persistent buffer, ensuring it won’t be lost if the broker restarts.
 
 ```javascript
-const payload = {
-  id: 123,
-  event: "user_created",
-  timestamp: new Date(),
-};
-
-await amqpClient.publish("user.events.create", payload);
+await amqpClient.publish(
+  "example.events.hello_world",
+  {
+    message: "Hello World!",
+  },
+  {}
+);
 ```
 
 ### 3. Consume Messages
 
-The `consume` method automatically asserts queues, binds them to the exchange, and handles acknowledgments (`ack`/`nack`).
+The `consume` method automatically creates queues, binds them to the exchange, and handles acknowledgments (`ack`/`nack`). You only need to provide the queue name and the function that will process incoming messages.
 
 ```javascript
 await amqpClient.consume(
-  "user_service_queue",
-  async (content, msg) => {
-    console.log("Received data:", content);
-    // Business logic here...
+  "example-queue",
+  (msg) => {
+    console.log("Received message:", msg);
   },
-  { prefetch: 10 }, // Optional: defaults to 10
-  "user.events.*" // Binding key (Topic pattern)
+  {},
+  "example.events.hello_world"
 );
 ```
 
-> ### More Examples
->
-> - [hello-world](https://github.com/iamcarlosdaniel/amqp-suite/tree/main/example/hello-world)
+### Example Overview
+
+This diagram illustrates how a message is sent from the publisher, routed through the topic exchange, enqueued in the queue, and finally consumed by the consumer.
+
+![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/example-architecture-diagram.svg)
+
+Here’s a full example that connects, publishes, consumes messages, and finally closes the connection.
+
+```javascript
+import { AmqpClient } from "amqp-suite";
+
+const amqpClient = new AmqpClient("amqp://localhost", "example-exchange");
+
+await amqpClient.connect();
+
+await amqpClient.publish(
+  "example.events.hello_world",
+  {
+    message: "Hello World!",
+  },
+  {}
+);
+
+await amqpClient.consume(
+  "example-queue",
+  (msg) => {
+    console.log("Received message:", msg);
+  },
+  {},
+  "example.events.hello_world"
+);
+
+await amqpClient.close();
+```
+
+> **Note:** You can check the full example in [examples/hello-world](https://github.com/iamcarlosdaniel/amqp-suite/tree/main/examples/hello-world).
 
 ## API Reference
 
