@@ -39,7 +39,7 @@ const AMQP_URL = "amqp://localhost";
  * Topic exchange name.
  * Topic exchanges allow flexible routing using patterns.
  */
-const TOPIC_EXCHANGE = "hello-exchange";
+const TOPIC_EXCHANGE = "example-exchange";
 
 /**
  * Connection retry configuration.
@@ -57,7 +57,7 @@ const ROUTING_KEY_PREFIX = "example.events";
 /**
  * Queue name where messages will be consumed.
  */
-const QUEUE_NAME = "hello-queue";
+const QUEUE_NAME = "example-queue";
 
 /**
  * Message handler for consumed messages.
