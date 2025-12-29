@@ -11,16 +11,44 @@
 
 ## Features
 
-- Automatic Reconnection: Built-in retry logic for connection failures and drops.
-- Simplified Pub/Sub: Designed for 'topic' exchanges to allow flexible routing.
-- Structured Messaging: Automatic JSON serialization and deserialization.
-- Error Handling: Graceful handling of malformed messages and channel crashes.
-- Flow Control: Integrated prefetch support to prevent consumer saturation.
+- **Automatic Reconnection:** Built-in retry logic for connection failures and drops.
+- **Simplified Pub/Sub:** Designed for 'topic' exchanges to allow flexible routing.
+- **Structured Messaging:** Automatic JSON serialization and deserialization.
+- **Error Handling:** Graceful handling of malformed messages and channel crashes.
+- **Flow Control:** Integrated prefetch support to prevent consumer saturation.
 
 ## Installation
 
+### Package manager
+
+Using npm:
+
 ```bash
 npm install amqp-suite
+```
+
+Using yarn:
+
+```bash
+yarn add amqp-suite
+```
+
+Using pnpm:
+
+```bash
+pnpm add amqp-suite
+```
+
+Using bun:
+
+```bash
+bun add amqp-suit
+```
+
+Once the package is installed, you can import the library using ES Modules:
+
+```javascript
+import { AmqpClient } from "amqp-suite";
 ```
 
 ## Quick Start
