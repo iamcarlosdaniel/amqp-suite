@@ -9,7 +9,7 @@
 
 `amqp-suite` is a simple and efficient AMQP (Advanced Message Queuing Protocol) client wrapper for Node.js that handles connection management, message publishing, and consuming messages from queues with a topic exchange. This package abstracts complex connection handling and simplifies AMQP usage in applications by providing easy-to-use methods for connecting, publishing, consuming, and gracefully shutting down the connection.
 
-## Features
+## 🔥 Features
 
 - **Automatic Reconnection:** Built-in retry logic for connection failures and drops.
 - **Simplified Pub/Sub:** Designed for 'topic' exchanges to allow flexible routing.
@@ -71,11 +71,11 @@ The `publish` method automatically stringifies your message and sends it as a pe
 
 ```javascript
 await amqpClient.publish(
-  "example.events.hello_world",
+  "example.events.hello_world", // Routing Key
   {
     message: "Hello World!",
   },
-  {}
+  {} // Options
 );
 ```
 
@@ -85,12 +85,12 @@ The `consume` method automatically creates queues, binds them to the exchange, a
 
 ```javascript
 await amqpClient.consume(
-  "example-queue",
+  "example-queue", // Queue
   (msg) => {
     console.log("Received message:", msg);
   },
-  {},
-  "example.events.hello_world"
+  {}, // Options
+  "example.events.hello_world" // Binding Key
 );
 ```
 
@@ -110,20 +110,20 @@ const amqpClient = new AmqpClient("amqp://localhost", "example-exchange");
 await amqpClient.connect();
 
 await amqpClient.publish(
-  "example.events.hello_world",
+  "example.events.hello_world", // Routing Key
   {
     message: "Hello World!",
   },
-  {}
+  {} // Options
 );
 
 await amqpClient.consume(
-  "example-queue",
+  "example-queue", // Queue
   (msg) => {
     console.log("Received message:", msg);
   },
-  {},
-  "example.events.hello_world"
+  {}, // Options
+  "example.events.hello_world" // Binding Key
 );
 
 await amqpClient.close();
