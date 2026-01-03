@@ -29,10 +29,8 @@ We use GitHub's native Private Vulnerability Reporting to handle security issues
 
 ## Our Process
 
-- **Acknowledgment:** You will receive a response within 48-72 hours.
+![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/fix_process_diagram.svg)
 
-- **Fix & Release:** We will work on a patch and release a new version on npm.
-
-- **Disclosure:** Once the fix is published, we will coordinate the public disclosure of the vulnerability.
+We handle each report through an agile three-stage process that ensures an initial response within 72 hours, prioritizes the fix and immediate release on npm, and concludes with a coordinated public disclosure to ensure transparency and protect our community.
 
 Thank you for helping keep this project and the npm ecosystem safe!
