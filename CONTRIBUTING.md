@@ -1,10 +1,10 @@
 # Contributing to AMQP-Suite
 
-If you have a question about AMQP-Suite (not a bug report) please post it to the [GitHub Discussions](https://www.google.com/search?q=https://github.com/iamcarlosdaniel/amqp-suite/discussions).
+If you have a question about AMQP-Suite (not a bug report) please post it to the [GitHub Discussions](https://github.com/iamcarlosdaniel/amqp-suite/discussions).
 
 ## Reporting bugs
 
-- Before opening a new issue, look for existing [issues](https://github.com/iamcarlosdaniel/amqp-suite/issues) to avoid duplication. If the issue does not yet exist, [create one](https://www.google.com/search?q=https://github.com/iamcarlosdaniel/amqp-suite/issues/new).
+- Before opening a new issue, look for existing [issues](https://github.com/iamcarlosdaniel/amqp-suite/issues) to avoid duplication. If the issue does not yet exist, [create one](https://github.com/iamcarlosdaniel/amqp-suite/issues/new).
 - Please post any relevant code samples, preferably a standalone script that reproduces your issue. Do **not** describe your issue in prose. **Show your code.**
 - If the bug involves an error, please post the stack trace.
 - Please post the version of **amqp-suite**, **Node.js**, and **RabbitMQ** that you're using.
