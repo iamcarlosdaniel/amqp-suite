@@ -7,6 +7,11 @@
 
 ![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
 
+> [!IMPORTANT]
+> Contributions, feedback and suggestions are welcome.  
+> If you have ideas for improvements, feature requests, or find any issues, please open an issue or submit a pull request.
+> Your input helps make this library better for everyone.
+
 `amqp-suite` is a simple and efficient AMQP (Advanced Message Queuing Protocol) client wrapper for Node.js that handles connection management, message publishing, and consuming messages from queues with a topic exchange. This package abstracts complex connection handling and simplifies AMQP usage in applications by providing easy-to-use methods for connecting, publishing, consuming, and gracefully shutting down the connection.
 
 ## 🔥 Features
