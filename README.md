@@ -12,8 +12,7 @@
 > [!IMPORTANT]
 > Contributions, feedback and suggestions are welcome.  
 > If you have ideas for improvements, feature requests, or find any issues, please open an issue or submit a pull request. <br/>
-> Your input helps make this library better for everyone —  
-> **[get started here](https://github.com/iamcarlosdaniel/amqp-suite?tab=contributing-ov-file)**.
+> Your input helps make this library better for everyone — [get started here](https://github.com/iamcarlosdaniel/amqp-suite?tab=contributing-ov-file).
 
 ## 🔥 Features
 
