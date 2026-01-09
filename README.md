@@ -11,8 +11,9 @@
 
 > [!IMPORTANT]
 > Contributions, feedback and suggestions are welcome.  
-> If you have ideas for improvements, feature requests, or find any issues, please open an issue or submit a pull request.
-> Your input helps make this library better for everyone.
+> If you have ideas for improvements, feature requests, or find any issues, please open an issue or submit a pull request. <br/>
+> Your input helps make this library better for everyone —  
+> **[get started here](https://github.com/iamcarlosdaniel/amqp-suite?tab=contributing-ov-file)**.
 
 ## 🔥 Features
 
@@ -47,7 +48,7 @@ pnpm add amqp-suite
 Using bun:
 
 ```bash
-bun add amqp-suit
+bun add amqp-suite
 ```
 
 Once the package is installed, you can import the library using ES Modules:
@@ -277,4 +278,4 @@ Gracefully closes the AMQP channel and connection.
 
 ## License
 
-This project is licensed under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the terms of the [MIT License](https://github.com/iamcarlosdaniel/amqp-suite?tab=MIT-1-ov-file).
