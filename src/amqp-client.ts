@@ -1,5 +1,7 @@
 import amqp from "amqplib";
 
+import type { ChannelModel, Channel, Options, ConsumeMessage } from "amqplib";
+
 /**
  * @fileoverview
  * AMQP Service Class to manage AMQP communication.
@@ -7,53 +9,52 @@ import amqp from "amqplib";
  * pub/sub patterns using 'topic' exchanges.
  */
 class AmqpClient {
+  private readonly amqpUrl: string;
+  private readonly exchange: string;
+  private channelModel: ChannelModel | null = null;
+  private channel: Channel | null = null;
+  /** State flag to prevent multiple simultaneous connection attempts. */
+  private isConnecting: boolean = false;
+  /** State flag to indicate if the client is closing. */
+  private isClosing: boolean = false;
+
   /**
    * Creates an instance of the AMQP helper.
-   * @param {string} amqpUrl - The connection string (e.g., 'amqp://localhost').
-   * @param {string} exchange - The name of the exchange to be used.
+   * @param amqpUrl - The connection string (e.g., 'amqp://localhost').
+   * @param exchange - The name of the exchange to be used.
    */
-  constructor(amqpUrl, exchange) {
-    /** @type {string} */
+  constructor(amqpUrl: string, exchange: string) {
     this.amqpUrl = amqpUrl;
-    /** @type {string} */
     this.exchange = exchange;
-    /** @type {import('amqplib').Connection|null} */
-    this.connection = null;
-    /** @type {import('amqplib').Channel|null} */
-    this.channel = null;
-    /** @type {boolean} State flag to prevent multiple simultaneous connection attempts. */
-    this.isConnecting = false;
-    /** @type {boolean} State flag to indicate if the client is closing. */
-    this.isClosing = false;
   }
 
   /**
    * Establishes a connection to the AMQP broker and sets up the infrastructure.
    * Implements a recursive retry logic in case of connection failure or drops.
-   * @param {number} [retries=5] - Maximum number of reconnection attempts.
-   * @param {number} [delay=5000] - Time interval in milliseconds between retries.
+   * @param retries - Maximum number of reconnection attempts.
+   * @param delay - Time interval in milliseconds between retries.
    * @returns {Promise<void>}
    * @throws {Error} Throws an error if all retry attempts fail.
    */
-  async connect(retries = 5, delay = 5000) {
+  async connect(retries: number = 5, delay: number = 5000): Promise<void> {
     if (this.isConnecting) return;
     this.isConnecting = true;
 
     try {
-      this.connection = await amqp.connect(this.amqpUrl);
-      this.channel = await this.connection.createChannel();
+      this.channelModel = await amqp.connect(this.amqpUrl);
+      this.channel = await this.channelModel.createChannel();
 
       // Infrastructure initial setup: Using 'topic' for flexible routing
       await this.channel.assertExchange(this.exchange, "topic", {
         durable: true,
       });
 
-      this.connection.on("error", (err) => {
+      this.channelModel.on("error", (err: any) => {
         console.error("AMQP Connection Error:", err);
       });
 
-      this.connection.on("close", () => {
-        this.connection = null;
+      this.channelModel.on("close", () => {
+        this.channelModel = null;
         this.channel = null;
 
         if (!this.isClosing) {
@@ -69,12 +70,12 @@ class AmqpClient {
       this.isConnecting = false;
       if (retries > 0) {
         console.error(
-          `AMQP: Connection failed. Retries left: ${retries}. Retrying in ${delay}ms...`
+          `AMQP: Connection failed. Retries left: ${retries}. Retrying in ${delay}ms...`,
         );
         setTimeout(() => this.connect(retries - 1, delay), delay);
       } else {
         console.error(
-          "AMQP: Critical failure. Could not connect after maximum attempts."
+          "AMQP: Critical failure. Could not connect after maximum attempts.",
         );
         throw error;
       }
@@ -83,30 +84,34 @@ class AmqpClient {
 
   /**
    * Publishes a message to the configured exchange.
-   * @param {string} routingKey - The routing key used to direct the message.
-   * @param {Object} message - The message payload (will be stringified to JSON).
-   * @param {import('amqplib').Options.Publish} [options={}] - Additional publish options.
+   * @param routingKey - The routing key used to direct the message.
+   * @param message - The message payload (will be stringified to JSON).
+   * @param options - Additional publish options.
    * @returns {Promise<void>}
    */
-  async publish(routingKey, message, options = {}) {
+  async publish(
+    routingKey: string,
+    message: unknown,
+    options: Options.Publish = {},
+  ): Promise<void> {
     if (!this.channel) {
       console.log("AMQP: Channel not initialized. Attempting to connect...");
       await this.connect();
     }
 
     try {
-      const published = this.channel.publish(
+      const published = this.channel!.publish(
         this.exchange,
         routingKey,
         Buffer.from(JSON.stringify(message)),
-        { persistent: true, ...options }
+        { persistent: true, ...options },
       );
 
       if (published) {
         console.log(`AMQP: Message published to [${routingKey}]`);
       } else {
         console.warn(
-          "AMQP: Message was buffered locally. Check broker capacity or channel drain."
+          "AMQP: Message was buffered locally. Check broker capacity or channel drain.",
         );
       }
     } catch (err) {
@@ -117,14 +122,18 @@ class AmqpClient {
 
   /**
    * Consumes messages from a specific queue.
-   * @param {string} queue - The name of the queue to consume from.
-   * @param {function(Object, import('amqplib').ConsumeMessage): Promise<void>} onMessage -
-   * Callback executed when a message is received.
-   * @param {Object} [options={}] - Additional queue and prefetch options.
-   * @param {string} [bindingKey="#"] - The binding pattern to link the queue to the exchange.
+   * @param queue - The name of the queue to consume from.
+   * @param onMessage - Callback executed when a message is received.
+   * @param options - Additional queue and prefetch options.
+   * @param bindingKey - The binding pattern to link the queue to the exchange.
    * @returns {Promise<void>}
    */
-  async consume(queue, onMessage, options = {}, bindingKey = "#") {
+  async consume(
+    queue: string,
+    onMessage: (content: any, msg: ConsumeMessage) => Promise<void>,
+    options: Options.AssertQueue & { prefetch?: number } = {},
+    bindingKey: string = "#",
+  ): Promise<void> {
     if (!this.channel) {
       console.log("AMQP: Channel not initialized. Attempting to connect...");
       await this.connect();
@@ -134,35 +143,38 @@ class AmqpClient {
       const { prefetch = 10, ...queueOptions } = options;
 
       // Ensure the queue exists and is durable by default
-      await this.channel.assertQueue(queue, { durable: true, ...queueOptions });
-      await this.channel.bindQueue(queue, this.exchange, bindingKey);
+      await this.channel!.assertQueue(queue, {
+        durable: true,
+        ...queueOptions,
+      });
+      await this.channel!.bindQueue(queue, this.exchange, bindingKey);
 
       // Limit unacknowledged messages to avoid overwhelming the consumer
-      await this.channel.prefetch(prefetch);
+      await this.channel!.prefetch(prefetch);
 
-      await this.channel.consume(
+      await this.channel!.consume(
         queue,
-        async (msg) => {
+        async (msg: ConsumeMessage | null) => {
           if (msg !== null) {
             try {
               const content = JSON.parse(msg.content.toString());
               await onMessage(content, msg);
-              this.channel.ack(msg);
-            } catch (err) {
+              this.channel!.ack(msg);
+            } catch (err: any) {
               console.error(
                 `AMQP: Error processing message on queue [${queue}]:`,
-                err.message
+                err.message,
               );
               // nack(message, requeue: false) to prevent infinite loops on malformed messages
-              this.channel.nack(msg, false, false);
+              this.channel!.nack(msg, false, false);
             }
           }
         },
-        { noAck: false }
+        { noAck: false },
       );
 
       console.log(
-        `AMQP: Consumer started for queue [${queue}] with binding [${bindingKey}]`
+        `AMQP: Consumer started for queue [${queue}] with binding [${bindingKey}]`,
       );
     } catch (err) {
       console.error("AMQP: Failed to initialize consumer:", err);
@@ -174,11 +186,11 @@ class AmqpClient {
    * Gracefully closes the AMQP channel and connection.
    * @returns {Promise<void>}
    */
-  async close() {
+  async close(): Promise<void> {
     try {
       this.isClosing = true;
       await this.channel?.close();
-      await this.connection?.close();
+      await (this.channelModel as any)?.close();
       console.log("AMQP: Connection closed cleanly.");
     } catch (err) {
       this.isClosing = false;

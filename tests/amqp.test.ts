@@ -4,16 +4,23 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import amqp from "amqplib";
-import { AmqpClient } from "amqp-suite";
+import { AmqpClient } from "../src/amqp-client.js";
 
 vi.mock("amqplib");
+
+/**
+ * Mocked wrapper for amqp module using Vitest features.
+ */
+const mockedAmqp = vi.mocked(amqp);
 
 /**
  * Test suite for AMQP integration and message handling.
  */
 describe("AMQP Class", () => {
-  /** @type {AmqpClient} */
-  let amqpInstance;
+  /** * @type {any}
+   * Bypassing private modifiers for strict testing assertions
+   */
+  let amqpInstance: any;
 
   /** @type {string} */
   const mockUrl = "amqp://localhost";
@@ -23,11 +30,15 @@ describe("AMQP Class", () => {
 
   /**
    * Mocked AMQP Channel object with Vitest spy functions.
-   * @type {Object}
+   * @type {Record<string, import('vitest').Mock>}
    */
   const mockChannel = {
     assertExchange: vi.fn().mockResolvedValue(undefined),
-    assertQueue: vi.fn().mockResolvedValue({}),
+    assertQueue: vi.fn().mockResolvedValue({
+      queue: "test_queue",
+      messageCount: 0,
+      consumerCount: 0,
+    }),
     bindQueue: vi.fn().mockResolvedValue(undefined),
     prefetch: vi.fn().mockResolvedValue(undefined),
     publish: vi.fn().mockReturnValue(true),
@@ -39,7 +50,7 @@ describe("AMQP Class", () => {
 
   /**
    * Mocked AMQP Connection object.
-   * @type {Object}
+   * @type {Record<string, import('vitest').Mock>}
    */
   const mockConnection = {
     createChannel: vi.fn().mockResolvedValue(mockChannel),
@@ -53,7 +64,7 @@ describe("AMQP Class", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     amqpInstance = new AmqpClient(mockUrl, mockExchange);
-    amqp.connect.mockResolvedValue(mockConnection);
+    mockedAmqp.connect.mockResolvedValue(mockConnection as any);
   });
 
   /**
@@ -70,12 +81,12 @@ describe("AMQP Class", () => {
   it("should connect and create a channel successfully", async () => {
     await amqpInstance.connect();
 
-    expect(amqp.connect).toHaveBeenCalledWith(mockUrl);
+    expect(mockedAmqp.connect).toHaveBeenCalledWith(mockUrl);
     expect(mockConnection.createChannel).toHaveBeenCalled();
     expect(mockChannel.assertExchange).toHaveBeenCalledWith(
       mockExchange,
       "topic",
-      { durable: true }
+      { durable: true },
     );
     expect(amqpInstance.connection).not.toBeNull();
   });
@@ -94,7 +105,7 @@ describe("AMQP Class", () => {
       mockExchange,
       routingKey,
       expect.any(Buffer),
-      expect.objectContaining({ persistent: true })
+      expect.objectContaining({ persistent: true }),
     );
   });
 
@@ -112,26 +123,30 @@ describe("AMQP Class", () => {
       queueName,
       mockOnMessage,
       { prefetch: 5 },
-      bindingKey
+      bindingKey,
     );
 
     expect(mockChannel.assertQueue).toHaveBeenCalledWith(
       queueName,
-      expect.objectContaining({ durable: true })
+      expect.objectContaining({ durable: true }),
     );
     expect(mockChannel.bindQueue).toHaveBeenCalledWith(
       queueName,
       mockExchange,
-      bindingKey
+      bindingKey,
     );
     expect(mockChannel.prefetch).toHaveBeenCalledWith(5);
 
-    const consumerCallback = mockChannel.consume.mock.calls[0][1];
+    const consumerCallback = mockChannel.consume.mock.calls[0]?.[1];
+    expect(consumerCallback).toBeDefined();
+
     const fakeMsg = {
       content: Buffer.from(JSON.stringify(mockPayload)),
     };
 
-    await consumerCallback(fakeMsg);
+    if (consumerCallback) {
+      await consumerCallback(fakeMsg as any);
+    }
 
     expect(mockOnMessage).toHaveBeenCalledWith(mockPayload, fakeMsg);
     expect(mockChannel.ack).toHaveBeenCalledWith(fakeMsg);
@@ -148,12 +163,16 @@ describe("AMQP Class", () => {
 
     await amqpInstance.consume("error_queue", mockOnMessage);
 
-    const consumerCallback = mockChannel.consume.mock.calls[0][1];
+    const consumerCallback = mockChannel.consume.mock.calls[0]?.[1];
+    expect(consumerCallback).toBeDefined();
+
     const fakeMsg = {
       content: Buffer.from(JSON.stringify({ some: "data" })),
     };
 
-    await consumerCallback(fakeMsg);
+    if (consumerCallback) {
+      await consumerCallback(fakeMsg as any);
+    }
 
     expect(mockChannel.nack).toHaveBeenCalledWith(fakeMsg, false, false);
     expect(mockChannel.ack).not.toHaveBeenCalled();
