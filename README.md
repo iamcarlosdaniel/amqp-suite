@@ -1,8 +1,9 @@
 # amqp-suite
 
 [![NPM version](https://img.shields.io/npm/v/amqp-suite?color=1447e6&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
-[![MIT license](https://img.shields.io/badge/License-MIT-bridhtgreen?style=flat-square)](https://opensource.org/licenses/MIT)
-[![NPM downloads](https://img.shields.io/npm/dw/amqp-suite?color=bridhtgreen&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
+[![GitHub license](https://img.shields.io/badge/License-MIT-bridhtgreen?style=flat-square)](https://opensource.org/licenses/MIT)
+![NPM Downloads](https://img.shields.io/npm/dw/amqp-suite?label=Downloads&color=brightgreen&style=flat-square)
+[![Run Tests](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml)
 [![stars](https://img.shields.io/github/stars/iamcarlosdaniel/amqp-suite)](https://github.com/iamcarlosdaniel/amqp-suite)
 
 ![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
@@ -80,7 +81,7 @@ await amqpClient.publish(
   {
     message: "Hello World!",
   },
-  {} // Options
+  {}, // Options
 );
 ```
 
@@ -95,7 +96,7 @@ await amqpClient.consume(
     console.log("Received message:", msg);
   },
   {}, // Options
-  "example.events.hello_world" // Binding Key
+  "example.events.hello_world", // Binding Key
 );
 ```
 
@@ -119,7 +120,7 @@ await amqpClient.publish(
   {
     message: "Hello World!",
   },
-  {} // Options
+  {}, // Options
 );
 
 await amqpClient.consume(
@@ -128,7 +129,7 @@ await amqpClient.consume(
     console.log("Received message:", msg);
   },
   {}, // Options
-  "example.events.hello_world" // Binding Key
+  "example.events.hello_world", // Binding Key
 );
 
 await amqpClient.close();
@@ -239,7 +240,6 @@ The `onMessage` callback is executed for each received message.
 
 - **`options`** (`object`, optional)
   Consumer configuration options.
-
   - **`prefetch`** (`number`):
     Limits the number of unacknowledged messages.
     Default: `10`
@@ -252,7 +252,6 @@ The `onMessage` callback is executed for each received message.
 
 - Messages are acknowledged (`ack`) automatically after successful processing.
 - If an error is thrown while processing a message:
-
   - The message is negatively acknowledged (`nack`)
   - The message is **not requeued**, preventing infinite retry loops for malformed messages.
 
