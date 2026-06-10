@@ -1,9 +1,9 @@
 # amqp-suite
 
 [![NPM version](https://img.shields.io/npm/v/amqp-suite?color=1447e6&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
+[![Run Tests](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml)
 [![GitHub license](https://img.shields.io/badge/License-MIT-bridhtgreen?style=flat-square)](https://opensource.org/licenses/MIT)
 ![NPM Downloads](https://img.shields.io/npm/dw/amqp-suite?label=Downloads&color=brightgreen&style=flat-square)
-[![Run Tests](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml)
 [![stars](https://img.shields.io/github/stars/iamcarlosdaniel/amqp-suite)](https://github.com/iamcarlosdaniel/amqp-suite)
 
 ![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
