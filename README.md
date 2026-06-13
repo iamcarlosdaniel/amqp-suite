@@ -1,16 +1,31 @@
 # amqp-suite
 
-[![NPM version](https://img.shields.io/npm/v/amqp-suite?color=1447e6&labelColor=343B42&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
-[![Run Tests](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml)
+[![npm version](https://img.shields.io/npm/v/amqp-suite?color=1447e6&labelColor=343B42&style=flat-square)](https://www.npmjs.com/package/amqp-suite)
+[![Run tests](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml/badge.svg)](https://github.com/iamcarlosdaniel/amqp-suite/actions/workflows/run-tests.yml)
 [![GitHub license](https://img.shields.io/badge/License-MIT-bridhtgreen?labelColor=343B42&style=flat-square)](https://opensource.org/licenses/MIT)
-![NPM Downloads](https://img.shields.io/npm/dw/amqp-suite?label=Downloads&color=brightgreen&labelColor=343B42&style=flat-square)
-[![stars](https://img.shields.io/github/stars/iamcarlosdaniel/amqp-suite)](https://github.com/iamcarlosdaniel/amqp-suite)
+![npm downloads](https://img.shields.io/npm/dw/amqp-suite?label=Downloads&color=brightgreen&labelColor=343B42&style=flat-square)
+[![Stars](https://img.shields.io/github/stars/iamcarlosdaniel/amqp-suite)](https://github.com/iamcarlosdaniel/amqp-suite)
 
-![](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
+![amqp-suite repository banner](https://raw.githubusercontent.com/iamcarlosdaniel/amqp-suite/main/docs/assets/repository_banner.png)
 
-`amqp-suite` is a simple and efficient AMQP (Advanced Message Queuing Protocol) client wrapper for Node.js that handles connection management, message publishing, and consuming messages from queues with a topic exchange. This package abstracts complex connection handling and simplifies AMQP usage in applications by providing easy-to-use methods for connecting, publishing, consuming, and gracefully shutting down the connection.
+<div align="center">
+  Developed by <a href="https://github.com/iamcarlosdaniel" target="_blank" rel="noopener noreferrer">@iamcarlosdaniel</a>
+</div>
 
-> [!IMPORTANT]
+<br />
+
+> **Note** <br />
+> A new version is coming soon and will include significant changes aimed at improving the developer experience from start to finish.
+>
+> <sub>— Carlos Daniel, Developer</sub>
+
+**amqp-suite** is a simple and efficient AMQP (Advanced Message Queuing Protocol) client wrapper for Node.js that handles connection management, message publishing, and consuming messages from queues with a topic exchange. This package abstracts complex connection handling and simplifies AMQP usage in applications by providing easy-to-use methods for connecting, publishing, consuming, and gracefully shutting down the connection.
+
+### [Read the docs ➝](https://iamcarlosdaniel.com/projects/amqp-suite/docs)
+
+<br />
+
+> **Important** <br />
 > Contributions, feedback and suggestions are welcome.  
 > If you have ideas for improvements, feature requests, or find any issues, please open an issue or submit a pull request. <br/>
 > Your input helps make this library better for everyone — [get started here](https://github.com/iamcarlosdaniel/amqp-suite?tab=contributing-ov-file).
@@ -135,7 +150,8 @@ await amqpClient.consume(
 await amqpClient.close();
 ```
 
-> **Note:** You can check the full example in [examples/hello-world](https://github.com/iamcarlosdaniel/amqp-suite/tree/main/examples/hello-world).
+> **Note** <br />
+> You can check the full example in [examples/hello-world](https://github.com/iamcarlosdaniel/amqp-suite/tree/main/examples/hello-world).
 
 ## API Reference
 
