@@ -45,25 +45,25 @@
 Using npm:
 
 ```bash
-npm install amqp-suite
+npm install amqplib amqp-suite
 ```
 
 Using yarn:
 
 ```bash
-yarn add amqp-suite
+yarn add amqplib amqp-suite
 ```
 
 Using pnpm:
 
 ```bash
-pnpm add amqp-suite
+pnpm add amqplib amqp-suite
 ```
 
 Using bun:
 
 ```bash
-bun add amqp-suite
+bun add amqplib amqp-suite
 ```
 
 Once the package is installed, you can import the library using ES Modules:
